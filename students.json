@@ -1,0 +1,25 @@
+[{
+   "id": 1,
+   "name": "anur",
+    "class": "1",
+    "age": "22",
+    "marks": {
+      "math": 100,
+      "science": 100,
+      "chemistry": 100,
+      "english": 99
+    }
+},
+{
+   "id": 2,
+   "name": "riya",
+    "class": "1",
+    "age": "22",
+    "marks": {
+      "math": 90,
+      "science": 90,
+      "chemistry": 96,
+      "english": 99
+    } 
+}
+]

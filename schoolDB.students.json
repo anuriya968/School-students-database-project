@@ -1,0 +1,64 @@
+[{
+  "_id": {
+    "$oid": "685a6756e68c44bd0b9322d4"
+  },
+  "id": 1,
+  "name": "anur",
+  "class": "1",
+  "age": 22,
+  "marks": {
+    "chemistry": 100,
+    "math": 100,
+    "science": 100,
+    "english": 99
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "685a6756e68c44bd0b9322d5"
+  },
+  "id": 2,
+  "name": "riya",
+  "class": "1",
+  "age": 22,
+  "marks": {
+    "chemistry": 96,
+    "math": 90,
+    "science": 90,
+    "english": 99
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "685a7a9848be82e2433050b1"
+  },
+  "id": 1,
+  "name": "anur",
+  "class": "1",
+  "age": 22,
+  "marks": {
+    "chemistry": 100,
+    "math": 100,
+    "science": 100,
+    "english": 99
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "685a7a9848be82e2433050b2"
+  },
+  "id": 2,
+  "name": "riya",
+  "class": "1",
+  "age": 22,
+  "marks": {
+    "chemistry": 96,
+    "math": 90,
+    "science": 90,
+    "english": 99
+  },
+  "__v": 0
+}]

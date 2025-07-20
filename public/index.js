@@ -27,10 +27,11 @@ async function loadStudents() {
         <td>${s.marks.maths|| 0}</td>
         <td>${s.marks.evs|| 0}</td>
         <td>${s.marks.hindi|| 0}</td>
+        <td>${totalMarks}</td>
+        
         <td>
           <button onclick="editStudent('${s._id}')">Edit</button>
           <button onclick="deleteStudent('${s._id}')">Delete</button>
-          <button onclick = "findStudent('${s._id}')">Find</button>
         </td>
       `;
       studentsTableBody.appendChild(tr);

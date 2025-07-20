@@ -21,12 +21,12 @@
   "id": 2,
   "name": "riya",
   "class": "1",
-  "age": 22,
+  "age": 5,
   "marks": {
-    "chemistry": 96,
-    "math": 90,
-    "science": 90,
-    "english": 99
+    "english": 96,
+    "maths": 90,
+    "evs": 90,
+    "hindi": 99
   },
   "__v": 0
 },
@@ -37,12 +37,12 @@
   "id": 1,
   "name": "anur",
   "class": "1",
-  "age": 22,
+  "age": 5,
   "marks": {
-    "chemistry": 100,
-    "math": 100,
-    "science": 100,
-    "english": 99
+    "english": 100,
+    "maths": 100,
+    "evs": 100,
+    "hindi": 99
   },
   "__v": 0
 },
@@ -53,12 +53,12 @@
   "id": 2,
   "name": "riya",
   "class": "1",
-  "age": 22,
+  "age": 5,
   "marks": {
-    "chemistry": 96,
-    "math": 90,
-    "science": 90,
-    "english": 99
+    "english": 96,
+    "maths": 90,
+    "evs": 90,
+    "hindi": 99
   },
   "__v": 0
 }]

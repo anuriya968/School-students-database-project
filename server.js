@@ -26,10 +26,10 @@ const studentSchema = new mongoose.Schema({
   class: { type: String, required: true },
   age: { type: Number, required: true },
   marks: {
-    chemistry: { type: Number, default: 0 },
-    math: { type: Number, default: 0 },
-    science: { type: Number, default: 0 },
-    english: { type: Number, default: 0 }
+    english: { type: Number, default: 0 },
+    maths: { type: Number, default: 0 },
+    evs: { type: Number, default: 0 },
+   hindi: { type: Number, default: 0 }
   }
 });
 

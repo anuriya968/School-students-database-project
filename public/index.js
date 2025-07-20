@@ -1,118 +1,120 @@
 // test change
 
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const path = require('path')
-const app = express();
+const form = document.getElementById('studentForm');
+const studentsTableBody = document.getElementById('studentsTableBody');
 
-app.use(express.json());
-app.use(cors());
-app.use(express.static(path.join(__dirname, 'public')));
+let editingStudentId = null; // To track if we are editing a student
 
-
-
-// Middleware to parse JSON bodies from requests
-app.use(express.json());
-
-app.use(cors()); // Allow cross-origin requests
-
-// Connect to MongoDB
-mongoose.connect('mongodb://127.0.0.1:27017/schoolDB', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}).then(() => console.log("MongoDB connected"))
-  .catch(err => console.log("MongoDB connection error:", err));
-
-// Define Student schema
-const studentSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  class: { type: String, required: true },
-  age: { type: Number, required: true },
-  marks: {
-    chemistry: { type: Number, default: 0 },
-    math: { type: Number, default: 0 },
-    science: { type: Number, default: 0 },
-    english: { type: Number, default: 0 }
-  }
-});
-
-const Student = mongoose.model('Student', studentSchema);
-
-// ROUTES
-
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public','index.html'));
-});
-
-
-// Get all students
-app.get('/students', async (req, res) => {
+async function loadStudents() {
   try {
-    const students = await Student.find({});
-    res.json(students);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+    const res = await fetch('/students');
+    const students = await res.json();
 
-// Get single student by ID
-app.get('/students/:id', async (req, res) => {
-  try {
-    const student = await Student.findById(req.params.id);
-    if (!student) return res.status(404).json({ error: "Student not found" });
-    res.json(student);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+    studentsTableBody.innerHTML = ''; // clear previous rows
 
-// Add a new student
-app.post('/students', async (req, res) => {
-  try {
-    const { name, class: studentClass, age, marks } = req.body;
-    const student = new Student({
-      name,
-      class: studentClass,
-      age,
-      marks
+    students.forEach(s => {
+      const totalMarks = (s.marks.english || 0) 
+                 + (s.marks.maths || 0) 
+                 + (s.marks.evs || 0) 
+                 + (s.marks.hindi || 0);
+                 
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${s.name}</td>
+        <td>${s.class}</td>
+        <td>${s.age}</td>
+        <td>${s.marks.english || 0}</td>
+        <td>${s.marks.maths|| 0}</td>
+        <td>${s.marks.evs|| 0}</td>
+        <td>${s.marks.hindi|| 0}</td>
+        <td>
+          <button onclick="editStudent('${s._id}')">Edit</button>
+          <button onclick="deleteStudent('${s._id}')">Delete</button>
+          <button onclick = "findStudent('${s._id}')">Find</button>
+        </td>
+      `;
+      studentsTableBody.appendChild(tr);
     });
-    await student.save();
-    res.status(201).json(student);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    console.error('Error loading students:', err);
   }
-});
+}
 
-//find a student by ID
-
-
-// Update a student by ID
-app.put('/students/:id', async (req, res) => {
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+  const formData = new FormData(form);
+  let marks = {};
   try {
-    const updatedStudent = await Student.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true }
-    );
-    if (!updatedStudent) return res.status(404).json({ error: "Student not found" });
-    res.json(updatedStudent);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+    marks = formData.get('marks') ? JSON.parse(formData.get('marks')) : {};
+  } catch {
+    alert('Marks must be valid JSON');
+    return;
+  }
+
+  const data = {
+    name: formData.get('name'),
+    class: formData.get('class'),
+    age: Number(formData.get('age')),
+    marks
+  };
+
+  let url = '/students';
+  let method = 'POST';
+
+  if (editingStudentId) {
+    // If editing, update the student
+    url = `/students/${editingStudentId}`;
+    method = 'PUT';
+  }
+
+  const res = await fetch(url, {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+
+  if (res.ok) {
+    form.reset();
+    editingStudentId = null;
+    form.querySelector('button').textContent = 'Add Student';
+    loadStudents();
+  } else {
+    const error = await res.json();
+    alert('Error: ' + (error.error || 'Failed to add/update student'));
   }
 });
 
-// Delete a student by ID
-app.delete('/students/:id', async (req, res) => {
+// Edit student function to load student data in form
+async function editStudent(id) {
   try {
-    const deletedStudent = await Student.findByIdAndDelete(req.params.id);
-    if (!deletedStudent) return res.status(404).json({ error: "Student not found" });
-    res.json({ message: "Student deleted successfully" });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+    const res = await fetch(`/students/${id}`);
+    if (!res.ok) throw new Error('Student not found');
+    const student = await res.json();
 
-// Start the server
-const PORT = 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    form.name.value = student.name;
+    form.class.value = student.class;
+    form.age.value = student.age;
+    form.marks.value = JSON.stringify(student.marks || {}, null, 2);
+
+    editingStudentId = id;
+    form.querySelector('button').textContent = 'Update Student';
+  } catch (err) {
+    alert('Error fetching student data');
+  }
+}
+
+// Delete student function
+async function deleteStudent(id) {
+  if (!confirm('Are you sure you want to delete this student?')) return;
+
+  try {
+    const res = await fetch(`/students/${id}`, { method: 'DELETE' });
+    if (!res.ok) throw new Error('Failed to delete');
+    loadStudents();
+  } catch (err) {
+    alert('Error deleting student');
+  }
+}
+
+// Load students on page load
+loadStudents();

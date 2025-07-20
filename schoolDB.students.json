@@ -5,12 +5,12 @@
   "id": 1,
   "name": "anur",
   "class": "1",
-  "age": 22,
+  "age": 5,
   "marks": {
-    "chemistry": 100,
-    "math": 100,
-    "science": 100,
-    "english": 99
+    "english": 100,
+    "maths": 100,
+    "evs": 100,
+    "hindi": 99
   },
   "__v": 0
 },
